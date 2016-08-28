@@ -8,6 +8,9 @@
     "build": "babel src -d dist --presets es2015,stage-2",
     "serve": "nodemon dist/index.js"
   },
+  "engines": {
+    "node": "6.3.0"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/chesterhow/overwatch-telegram-bot.git"
