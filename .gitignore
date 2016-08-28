@@ -1,0 +1,15 @@
+# dependencies
+node_modules
+.idea
+old
+
+# build artifacts
+dist
+
+# OS-specific files
+.DS_Store
+*~
+._*
+
+# Logs
+npm-debug.log
