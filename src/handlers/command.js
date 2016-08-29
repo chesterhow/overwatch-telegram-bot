@@ -1,5 +1,7 @@
+import dedent from 'dedent-js';
 import { fetchOverallStats } from '../services/fetchOverallStats';
 import { fetchAverageStats } from '../services/fetchAverageStats';
+import { fetchBestStats } from '../services/fetchBestStats';
 
 export default class Command {
   constructor() {}
@@ -47,7 +49,32 @@ export default class Command {
     }
   }
 
+  getBestStats(message, bot) {
+    const messageParts = message.text.split(' ');
+    let reply = '';
+
+    if (messageParts.length === 1) {
+      this.sendHint(message, bot, '/beststats');
+    } else {
+      const battletag = messageParts[1];
+      this.sendSearching(message, bot, battletag);
+
+      fetchBestStats(battletag)
+        .then(reply => {
+          bot.sendMessage(message.chat.id, reply, { parse_mode: 'Markdown' });
+        })
+    }
+  }
+
   getHelp(message, bot) {
-    bot.sendMessage(message.chat.id, '/overallstats <Username>-<Battle id> - Get overall stats of a player');
+    const reply = dedent`*Help*
+    Usage: <command> <Username>-<Battle ID>
+    E.g. /overallstats LastBastion-12345
+
+    *Commands*
+    /overallstats
+    /averagestats
+    /beststats`;
+    bot.sendMessage(message.chat.id, reply, { parse_mode: 'Markdown' });
   }
 }

@@ -18,6 +18,7 @@
   "author": "Chester How",
   "license": "MIT",
   "dependencies": {
+    "dedent-js": "^1.0.1",
     "node-fetch": "^1.6.0",
     "node-telegram-bot-api": "^0.23.3"
   },

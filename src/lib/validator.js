@@ -6,13 +6,15 @@ export default class Validator {
     return command.match(pattern) || command.match(longPattern);
   }
 
-  isAskingForOverallStats(text) {
-    const command = text.split(' ')[0];
+  isAskingForOverallStats(command) {
     return this.matchPatterns(command, '/overallstats');
   }
 
-  isAskingForAverageStats(text) {
-    const command = text.split(' ')[0];
+  isAskingForAverageStats(command) {
     return this.matchPatterns(command, '/averagestats');
+  }
+
+  isAskingForBestStats(command) {
+    return this.matchPatterns(command, '/beststats');
   }
 }

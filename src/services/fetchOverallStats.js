@@ -14,7 +14,7 @@ const formatStats = (data, battletag) => {
 
 export const fetchOverallStats = (battletag) => {
   const url = `${API_URL}/${battletag}/stats/general`;
-  const headers = { 'Content-Type': 'application/json'};
+  const headers = { 'Content-Type': 'application/json' };
 
   return fetch(url, { headers })
     .then(response => response.json())

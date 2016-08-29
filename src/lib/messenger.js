@@ -8,6 +8,8 @@ const validator = new Validator();
 
 export default class Messenger {
   constructor() {
+    //TODO: Figure out webhooks
+
     // if (process.env.NODE_ENV === 'production') {
     //   this.bot = new TelegramBot(config.telegram.token, { webHook: { port: config.telegram.port, host: config.telegram.host } });
     //   this.bot.setWebHook(`${config.telegram.externalUrl}:433/bot${config.telegram.token}`);
@@ -28,14 +30,19 @@ export default class Messenger {
 
   handleText(msg) {
     const message = new Message(Message.mapMessage(msg));
-    const text = message.text;
+    console.log(`BOT CALLED: ${message.text}`);
+    const command = message.text.split(' ')[0];
 
-    if (validator.isAskingForOverallStats(text)) {
+    if (validator.isAskingForOverallStats(command)) {
       return handlers.command.getOverallStats(message, this.bot);
     }
 
-    if (validator.isAskingForAverageStats(text)) {
+    if (validator.isAskingForAverageStats(command)) {
       return handlers.command.getAverageStats(message, this.bot);
+    }
+
+    if (validator.isAskingForBestStats(command)) {
+      return handlers.command.getBestStats(message, this.bot);
     }
 
     return handlers.command.getHelp(message, this.bot);

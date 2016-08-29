@@ -11,8 +11,9 @@ const formatStats = (data, battletag) => {
   - Deaths: ${stats['deaths_avg']}
   - Final Blows: ${stats['final_blows_avg']}
   - Melee Final Blows: ${stats['melee_final_blows_avg']}
-  - Objective Kills: ${stats['objective_kills_avg']}
   - Solo Kills: ${stats['solo_kills_avg']}
+  - Objective Kills: ${stats['objective_kills_avg']}
+  - Objective Time: ${stats['objective_time_avg'].toFixed(2)}
   - Offensive Assists: ${stats['offensive_assists_avg']}
   - Defensive Assists: ${stats['defensive_assists_avg']}
   - Time Spent on Fire: ${stats['time_spent_on_fire_avg'].toFixed(2)}`;
