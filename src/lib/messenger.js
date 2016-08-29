@@ -34,6 +34,10 @@ export default class Messenger {
       return handlers.command.getOverallStats(message, this.bot);
     }
 
+    if (validator.isAskingForAverageStats(text)) {
+      return handlers.command.getAverageStats(message, this.bot);
+    }
+
     return handlers.command.getHelp(message, this.bot);
   }
 }
