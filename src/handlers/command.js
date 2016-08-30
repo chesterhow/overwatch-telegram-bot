@@ -2,6 +2,7 @@ import dedent from 'dedent-js';
 import { fetchOverallStats } from '../services/fetchOverallStats';
 import { fetchAverageStats } from '../services/fetchAverageStats';
 import { fetchBestStats } from '../services/fetchBestStats';
+import { MSG_PARSE_MODE } from '../constants';
 
 export default class Command {
   constructor() {}
@@ -16,8 +17,8 @@ export default class Command {
 
 
   getOverallStats(message, bot) {
-    const messageParts = message.text.split(' ');
-    let reply = '';
+    let messageParts = message.text.split(' ');
+    messageParts = messageParts.filter(part => /\S/.test(part));
 
     if (messageParts.length === 1) {
       this.sendHint(message, bot, '/overallstats');
@@ -25,16 +26,17 @@ export default class Command {
       const battletag = messageParts[1];
       this.sendSearching(message, bot, battletag);
 
-      fetchOverallStats(battletag)
+      const competitive = messageParts[0].substring(13, 18) === '_comp';
+      fetchOverallStats(battletag, competitive)
         .then(reply => {
-          bot.sendMessage(message.chat.id, reply, { parse_mode: 'Markdown' });
+          bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
         })
     }
   }
 
   getAverageStats(message, bot) {
-    const messageParts = message.text.split(' ');
-    let reply = '';
+    let messageParts = message.text.split(' ');
+    messageParts = messageParts.filter(part => /\S/.test(part));
 
     if (messageParts.length === 1) {
       this.sendHint(message, bot, '/averagestats');
@@ -42,16 +44,17 @@ export default class Command {
       const battletag = messageParts[1];
       this.sendSearching(message, bot, battletag);
 
-      fetchAverageStats(battletag)
+      const competitive = messageParts[0].substring(13, 18) === '_comp';
+      fetchAverageStats(battletag, competitive)
         .then(reply => {
-          bot.sendMessage(message.chat.id, reply, { parse_mode: 'Markdown'});
+          bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
         })
     }
   }
 
   getBestStats(message, bot) {
-    const messageParts = message.text.split(' ');
-    let reply = '';
+    let messageParts = message.text.split(' ');
+    messageParts = messageParts.filter(part => /\S/.test(part));
 
     if (messageParts.length === 1) {
       this.sendHint(message, bot, '/beststats');
@@ -59,9 +62,11 @@ export default class Command {
       const battletag = messageParts[1];
       this.sendSearching(message, bot, battletag);
 
-      fetchBestStats(battletag)
+      const competitive = messageParts[0].substring(10, 15) === '_comp';
+      // console.log()
+      fetchBestStats(battletag, competitive)
         .then(reply => {
-          bot.sendMessage(message.chat.id, reply, { parse_mode: 'Markdown' });
+          bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
         })
     }
   }
@@ -75,6 +80,6 @@ export default class Command {
     /overallstats
     /averagestats
     /beststats`;
-    bot.sendMessage(message.chat.id, reply, { parse_mode: 'Markdown' });
+    bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
   }
 }
