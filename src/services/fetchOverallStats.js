@@ -6,13 +6,20 @@ const headers = HTTP_HEADERS;
 const formatStats = (data, battletag, competitive) => {
   const stats = data['overall_stats'];
   const gameMode = competitive ? 'Competitive' : 'Quick Play';
+  let level = stats['level'];
+  if (typeof stats['prestige'] === 'number') {
+    level += (stats['prestige'] * 100);
+  }
+
+  const winRate = ((stats['wins'] / stats['games']) * 100).toFixed(2);
 
   return `*${battletag}*'s Overall Stats (${gameMode}):
-  - Level: ${stats['level'] || 0}
+  - Level: ${level || 0}
   - Games: ${stats['games'] || 0}
   - Wins: ${stats['wins'] || 0}
   - Losses: ${stats['losses'] || 0}
-  - Win Rate: ${stats['win_rate'] || 0}%`;
+  - Win Rate: ${winRate || 0}%
+  - Rating: ${stats['comprank'] || 0}`;
 }
 
 export const fetchOverallStats = (battletag, competitive) => {
