@@ -15,6 +15,9 @@
     "type": "git",
     "url": "https://github.com/chesterhow/overwatch-telegram-bot.git"
   },
+  "bugs": {
+    "url": "https://github.com/chesterhow/overwatch-telegram-bot/issues"
+  },
   "author": "Chester How",
   "license": "MIT",
   "dependencies": {
@@ -30,5 +33,11 @@
     "babel-preset-stage-2": "^6.13.0",
     "babel-register": "^6.14.0",
     "nodemon": "^1.10.2"
-  }
+  },
+  "keywords": [
+    "node",
+    "overwatch",
+    "telegram",
+    "bot"
+  ]
 }
