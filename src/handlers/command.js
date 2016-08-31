@@ -63,7 +63,6 @@ export default class Command {
       this.sendSearching(message, bot, battletag);
 
       const competitive = messageParts[0].substring(10, 15) === '_comp';
-      // console.log()
       fetchBestStats(battletag, competitive)
         .then(reply => {
           bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
@@ -78,14 +77,18 @@ export default class Command {
 
     *Commands*
     Quick Play Stats
+    \`\`\`
     /overallstats
     /averagestats
     /beststats
+    \`\`\`
 
     Competitive Stats
+    \`\`\`
     /overallstats_comp
     /averagestats_comp
-    /beststats_comp`;
+    /beststats_comp
+    \`\`\``;
     bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
   }
 }
