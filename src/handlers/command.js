@@ -77,9 +77,15 @@ export default class Command {
     E.g. /overallstats LastBastion-12345
 
     *Commands*
+    Quick Play Stats
     /overallstats
     /averagestats
-    /beststats`;
+    /beststats
+
+    Competitive Stats
+    /overallstats_comp
+    /averagestats_comp
+    /beststats_comp`;
     bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
   }
 }

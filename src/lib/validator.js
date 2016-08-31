@@ -1,6 +1,15 @@
 import { BOT_USERNAME } from '../constants';
 
 export default class Validator {
+  matchDefaultPatterns(command, pattern) {
+    const patterns = [
+      pattern,
+      `${pattern}${BOT_USERNAME}`,
+    ];
+
+    return patterns.indexOf(command) >= 0;
+  }
+
   matchPatterns(command, pattern) {
     const patterns = [
       pattern,
@@ -22,5 +31,9 @@ export default class Validator {
 
   isAskingForBestStats(command) {
     return this.matchPatterns(command, '/beststats');
+  }
+
+  isAskingForHelp(command) {
+    return this.matchDefaultPatterns(command, '/help');
   }
 }

@@ -45,6 +45,10 @@ export default class Messenger {
       return handlers.command.getBestStats(message, this.bot);
     }
 
-    return handlers.command.getHelp(message, this.bot);
+    if (validator.isAskingForHelp(command)) {
+      return handlers.command.getHelp(message, this.bot);
+    }
+
+    return null;
   }
 }
