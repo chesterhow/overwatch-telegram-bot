@@ -1,5 +1,6 @@
 import fetch from 'node-fetch';
 import { API_URL, HTTP_HEADERS } from '../constants';
+import { hoursToMinutes } from './parseTime';
 
 const headers = HTTP_HEADERS;
 
@@ -16,10 +17,10 @@ const formatStats = (data, battletag, competitive) => {
   - Melee Final Blows: ${stats['melee_final_blows_avg'] || 0}
   - Solo Kills: ${stats['solo_kills_avg'] || 0}
   - Objective Kills: ${stats['objective_kills_avg'] || 0}
-  - Objective Time: ${stats['objective_time_avg'].toFixed(2) || 0}
+  - Objective Time: ${hoursToMinutes(stats['objective_time_avg']) || 0}
   - Offensive Assists: ${stats['offensive_assists_avg'] || 0}
   - Defensive Assists: ${stats['defensive_assists_avg'] || 0}
-  - Time Spent on Fire: ${stats['time_spent_on_fire_avg'].toFixed(2) || 0}`;
+  - Time Spent on Fire: ${hoursToMinutes(stats['time_spent_on_fire_avg']) || 0}`;
 }
 
 export const fetchAverageStats = (battletag, competitive) => {
