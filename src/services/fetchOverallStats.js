@@ -1,3 +1,4 @@
+import dedent from 'dedent-js';
 import fetch from 'node-fetch';
 import { API_URL, HTTP_HEADERS } from '../constants';
 
@@ -11,15 +12,25 @@ const formatStats = (data, battletag, competitive) => {
     level += (stats['prestige'] * 100);
   }
 
-  const winRate = ((stats['wins'] / stats['games']) * 100).toFixed(2);
+  let competitiveOnlyStats;
 
-  return `*${battletag}*'s Overall Stats (${gameMode}):
+  if (competitive) {
+    const winRate = ((stats['wins'] / stats['games']) * 100).toFixed(2);
+    competitiveOnlyStats = dedent`- Losses: ${stats['losses'] || 0}
+    - Win Rate: ${winRate || 0}%
+    - Games: ${stats['games'] || 0}`;
+  }
+
+  let divider = '';
+  [...Array(battletag.length)].forEach(() => divider += '=');
+
+  return dedent`*${battletag}*
+  ${divider}
+  ${gameMode} Stats:
   - Level: ${level || 0}
-  - Games: ${stats['games'] || 0}
+  - Rating: ${stats['comprank'] || 0}
   - Wins: ${stats['wins'] || 0}
-  - Losses: ${stats['losses'] || 0}
-  - Win Rate: ${winRate || 0}%
-  - Rating: ${stats['comprank'] || 0}`;
+  ${competitiveOnlyStats || ''}`;
 }
 
 export const fetchOverallStats = (battletag, competitive) => {
