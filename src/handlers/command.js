@@ -2,10 +2,15 @@ import dedent from 'dedent-js';
 import { fetchOverallStats } from '../services/fetchOverallStats';
 import { fetchAverageStats } from '../services/fetchAverageStats';
 import { fetchBestStats } from '../services/fetchBestStats';
+import { fetchMostPlayed } from '../services/fetchMostPlayed';
 import { MSG_PARSE_MODE } from '../constants';
 
 export default class Command {
   constructor() {}
+
+  getMessageParts(message) {
+    return message.split(' ').filter(part => /\S/.test(part));
+  };
 
   sendHint(message, bot, command) {
     bot.sendMessage(message.chat.id, `Use ${command} <Username>-<Battle ID>.\nE.g. ${command} LastBastion-12345`);
@@ -17,8 +22,7 @@ export default class Command {
 
 
   getOverallStats(message, bot) {
-    let messageParts = message.text.split(' ');
-    messageParts = messageParts.filter(part => /\S/.test(part));
+    let messageParts = this.getMessageParts(message.text);
 
     if (messageParts.length === 1) {
       this.sendHint(message, bot, '/overallstats');
@@ -26,7 +30,7 @@ export default class Command {
       const battletag = messageParts[1];
       this.sendSearching(message, bot, battletag);
 
-      const competitive = messageParts[0].substring(13, 18) === '_comp';
+      const competitive = messageParts[0].slice(-5) === '_comp';
       fetchOverallStats(battletag, competitive)
         .then(reply => {
           bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
@@ -35,8 +39,7 @@ export default class Command {
   }
 
   getAverageStats(message, bot) {
-    let messageParts = message.text.split(' ');
-    messageParts = messageParts.filter(part => /\S/.test(part));
+    let messageParts = this.getMessageParts(message.text);
 
     if (messageParts.length === 1) {
       this.sendHint(message, bot, '/averagestats');
@@ -44,7 +47,7 @@ export default class Command {
       const battletag = messageParts[1];
       this.sendSearching(message, bot, battletag);
 
-      const competitive = messageParts[0].substring(13, 18) === '_comp';
+      const competitive = messageParts[0].slice(-5) === '_comp';
       fetchAverageStats(battletag, competitive)
         .then(reply => {
           bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
@@ -53,8 +56,7 @@ export default class Command {
   }
 
   getBestStats(message, bot) {
-    let messageParts = message.text.split(' ');
-    messageParts = messageParts.filter(part => /\S/.test(part));
+    let messageParts = this.getMessageParts(message.text);
 
     if (messageParts.length === 1) {
       this.sendHint(message, bot, '/beststats');
@@ -62,8 +64,25 @@ export default class Command {
       const battletag = messageParts[1];
       this.sendSearching(message, bot, battletag);
 
-      const competitive = messageParts[0].substring(10, 15) === '_comp';
+      const competitive = messageParts[0].slice(-5) === '_comp';
       fetchBestStats(battletag, competitive)
+        .then(reply => {
+          bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
+        })
+    }
+  }
+
+  getMostPlayed(message, bot) {
+    let messageParts = this.getMessageParts(message.text);
+
+    if (messageParts.length === 1) {
+      this.sendHint(message, bot, '/mostplayed');
+    } else {
+      const battletag = messageParts[1];
+      this.sendSearching(message, bot, battletag);
+
+      const competitive = messageParts[0].slice(-5) === '_comp';
+      fetchMostPlayed(battletag, competitive)
         .then(reply => {
           bot.sendMessage(message.chat.id, reply, MSG_PARSE_MODE);
         })

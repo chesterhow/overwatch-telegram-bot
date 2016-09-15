@@ -45,6 +45,10 @@ export default class Messenger {
       return handlers.command.getBestStats(message, this.bot);
     }
 
+    if (validator.isAskingForMostPlayed(command)) {
+      return handlers.command.getMostPlayed(message, this.bot);
+    }
+
     if (validator.isAskingForHelp(command)) {
       return handlers.command.getHelp(message, this.bot);
     }

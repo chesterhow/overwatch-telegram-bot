@@ -33,6 +33,10 @@ export default class Validator {
     return this.matchPatterns(command, '/beststats');
   }
 
+  isAskingForMostPlayed(command) {
+    return this.matchPatterns(command, '/mostplayed');
+  }
+
   isAskingForHelp(command) {
     return this.matchDefaultPatterns(command, '/help');
   }
