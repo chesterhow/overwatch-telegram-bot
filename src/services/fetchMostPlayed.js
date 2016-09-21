@@ -1,30 +1,31 @@
 import dedent from 'dedent-js';
 import fetch from 'node-fetch';
-import { API_URL, HTTP_HEADERS } from '../constants';
+import { API_URL_NEW, HTTP_HEADERS } from '../constants';
 import { hoursToMinutes } from './parseTime';
-
-const headers = HTTP_HEADERS;
+import { pluralize } from './formatText';
 
 const formatStats = (data, battletag, competitive) => {
-  const stats = data['heroes'];
-  const gameMode = competitive ? 'Competitive' : 'Quick Play';
-  const mostPlayed = [];
+  const gameMode = competitive ? 'competitive' : 'quickplay';
+  const stats = data['us']['heroes']['playtime'][gameMode];
 
-  const heroesArr = Object.keys(stats).map(key => {
-    return {
-      name: key,
-      timePlayed: stats[key],
-    };
-  });
+  const heroesArr = Object.keys(stats).map(key => ({
+    name: key,
+    timePlayed: stats[key],
+  }));
 
   heroesArr.sort((a, b) => b.timePlayed - a.timePlayed);
 
   let topFive = '';
 
   heroesArr.forEach((hero, index) => {
-    if (index < 5) {
+    if (index < 5 && hero.timePlayed > 0) {
       const name = hero.name.charAt(0).toUpperCase() + hero.name.slice(1);
-      topFive += `${index + 1}. ${name}: ${hero.timePlayed}\n`;
+      let timePlayed = `${hero.timePlayed} ${pluralize('hour', hero.timePlayed)}`;
+      if (hero.timePlayed % 1 !== 0) {
+        const minutes = hoursToMinutes(hero.timePlayed)
+        timePlayed = `${minutes} ${pluralize('minute', minutes)}`;
+      }
+      topFive += `${index + 1}. ${name}: ${timePlayed}\n`;
     }
   });
 
@@ -33,10 +34,9 @@ const formatStats = (data, battletag, competitive) => {
 }
 
 export const fetchMostPlayed = (battletag, competitive) => {
-  const gameMode = competitive ? 'competitive' : 'general';
-  const url = `${API_URL}/${battletag}/heroes/${gameMode}`;
+  const url = `${API_URL_NEW}/${battletag}/heroes`;
 
-  return fetch(url, { headers })
+  return fetch(url, { headers: HTTP_HEADERS })
     .then(response => response.json())
     .then(json => formatStats(json, battletag, competitive))
     .catch(error => {
