@@ -1,6 +1,6 @@
 import dedent from 'dedent-js';
 import fetch from 'node-fetch';
-import { API_URL_NEW, HTTP_HEADERS } from '../constants';
+import { API_URL, HTTP_HEADERS } from '../constants';
 import { hoursToMinutes } from './parseTime';
 import { pluralize } from './formatText';
 
@@ -34,7 +34,7 @@ const formatStats = (data, battletag, competitive) => {
 }
 
 export const fetchMostPlayed = (battletag, competitive) => {
-  const url = `${API_URL_NEW}/${battletag}/heroes`;
+  const url = `${API_URL}/${battletag}/heroes`;
 
   return fetch(url, { headers: HTTP_HEADERS })
     .then(response => response.json())
