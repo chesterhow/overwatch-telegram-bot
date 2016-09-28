@@ -6,6 +6,7 @@ export const HTTP_HEADERS = { 'Content-Type': 'application/json' };
 export const REPLY_MARKUP = {
   reply_markup: {
     keyboard: [],
+    selective: true,
     resize_keyboard: true,
     one_time_keyboard: true,
   },

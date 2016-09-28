@@ -1,6 +1,9 @@
 import dedent from 'dedent-js';
-import { fetchStats } from '../services/fetchStats';
+import fetchStats from '../services/fetchStats';
+import formatBestStats from '../services/formatBestStats';
+import formatMostPlayed from '../services/formatMostPlayed';
 import formatOverallStats from '../services/formatOverallStats';
+import formatAverageStats from '../services/formatAverageStats';
 import { PARSE_MODE, REPLY_MARKUP } from '../constants';
 
 export default class CommandHandler {
@@ -12,19 +15,19 @@ export default class CommandHandler {
   }
 
   splitMessage(text) {
-    return text.split(' ').filter(part => /\S/.test(part));
+    return text.split(' ').filter((part) => /\S/.test(part));
   }
 
   formatStats(option, data) {
     switch (option) {
       case 'Overall':
-        return formatOverallStats(data, this.battletag);
+        return formatOverallStats(data, this.battletag, this.gameMode);
       case 'Average':
-        return 'Requested for averagestats';
+        return formatAverageStats(data, this.battletag, this.gameMode);
       case 'Best':
-        return 'Requested for beststats';
+        return formatBestStats(data, this.battletag, this.gameMode);
       case 'Most Played':
-        return 'Requested for overallstats';
+        return formatMostPlayed(data, this.battletag, this.gameMode);
       default:
         return 'Invalid option';
     }
@@ -34,10 +37,11 @@ export default class CommandHandler {
     this.bot.sendMessage(this.chatID, `Use ${command} <Username>-<Battle ID>.\nE.g. ${command} LastBastion-12345`);
   }
 
-  selectStats(gameModeData) {
+  selectStats(data, messageID) {
     const options = {
       ...PARSE_MODE,
       ...REPLY_MARKUP,
+      reply_to_message_id: messageID,
     };
 
     options['reply_markup']['keyboard'] = [
@@ -48,16 +52,17 @@ export default class CommandHandler {
     this.bot.sendMessage(this.chatID, 'Select stats to view', options)
       .then((sent) => {
         this.bot.onReplyToMessage(sent.chat.id, sent.message_id, ((response) => {
-          const statsReply = this.formatStats(response.text, gameModeData);
+          const statsReply = this.formatStats(response.text, data);
           this.bot.sendMessage(this.chatID, statsReply, PARSE_MODE);
         }));
       });
   }
 
-  selectGameMode(stats, reply) {
+  selectGameMode(data, reply) {
     const options = {
       ...PARSE_MODE,
       ...REPLY_MARKUP,
+      reply_to_message_id: this.message.message_id,
     };
 
     options['reply_markup']['keyboard'] = [
@@ -68,32 +73,29 @@ export default class CommandHandler {
     this.bot.sendMessage(this.chatID, reply, options)
       .then((sent) => {
         this.bot.onReplyToMessage(sent.chat.id, sent.message_id, ((response) => {
-          const gameModeData = (response.text === 'Competitive') ?
-            stats['competitive'] : stats['quickplay'];
-          this.selectStats(gameModeData);
+          this.gameMode = response.text === 'Competitive' ? 'competitive' : 'quickplay';
+          this.selectStats(data, response.message_id);
         }));
       });
   }
 
   getRegionStats(json, region) {
     let reply = 'Sorry, I could not find the user ';
-    let stats = null;
-    let playerData = null;
+    let data = null;
 
     if (!region || region === 'us') {
-      playerData = json.us;
+      data = json.us;
     } else if (region === 'eu') {
-      playerData = json.eu;
+      data = json.eu;
     } else if (region === 'kr') {
-      playerData = json.kr;
+      data = json.kr;
     }
 
-    if (playerData) {
+    if (data) {
       reply = 'Select game mode';
-      stats = playerData['stats'];
     }
 
-    return { stats, reply };
+    return { data, reply };
   }
 
   getStats() {
@@ -108,10 +110,10 @@ export default class CommandHandler {
 
       fetchStats(this.battletag)
         .then((json) => {
-          const { stats, reply } = this.getRegionStats(json, region);
+          const { data, reply } = this.getRegionStats(json, region);
 
-          if (stats) {
-            this.selectGameMode(stats, reply);
+          if (data) {
+            this.selectGameMode(data, reply);
           } else {
             this.bot.sendMessage(this.chatID, `${reply}${this.battletag}`, PARSE_MODE);
           }
