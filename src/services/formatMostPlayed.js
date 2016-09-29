@@ -26,7 +26,7 @@ const formatMostPlayed = (data, battletag, gameMode) => {
     }
   });
 
-  return dedent`*${battletag}*'s Most Played Heroes'
+  return dedent`*${battletag}*'s Most Played Heroes
   ${topFive}`;
 };
 

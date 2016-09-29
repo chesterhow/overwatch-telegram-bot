@@ -4,7 +4,7 @@ import formatBestStats from '../services/formatBestStats';
 import formatMostPlayed from '../services/formatMostPlayed';
 import formatOverallStats from '../services/formatOverallStats';
 import formatAverageStats from '../services/formatAverageStats';
-import { PARSE_MODE, REPLY_MARKUP } from '../constants';
+import { PARSE_MODE, REPLY_MARKUP_KEYBOARD, REPLY_MARKUP_HIDE_KEYBOARD } from '../constants';
 
 export default class CommandHandler {
   constructor(bot, message) {
@@ -38,9 +38,9 @@ export default class CommandHandler {
   }
 
   selectStats(data, messageID) {
-    const options = {
+    let options = {
       ...PARSE_MODE,
-      ...REPLY_MARKUP,
+      ...REPLY_MARKUP_KEYBOARD,
       reply_to_message_id: messageID,
     };
 
@@ -52,8 +52,13 @@ export default class CommandHandler {
     this.bot.sendMessage(this.chatID, 'Select stats to view', options)
       .then((sent) => {
         this.bot.onReplyToMessage(sent.chat.id, sent.message_id, ((response) => {
+          options = {
+            ...PARSE_MODE,
+            ...REPLY_MARKUP_HIDE_KEYBOARD,
+            reply_to_message_id: response.message_id,
+          };
           const statsReply = this.formatStats(response.text, data);
-          this.bot.sendMessage(this.chatID, statsReply, PARSE_MODE);
+          this.bot.sendMessage(this.chatID, statsReply, options);
         }));
       });
   }
@@ -61,7 +66,7 @@ export default class CommandHandler {
   selectGameMode(data, reply) {
     const options = {
       ...PARSE_MODE,
-      ...REPLY_MARKUP,
+      ...REPLY_MARKUP_KEYBOARD,
       reply_to_message_id: this.message.message_id,
     };
 
