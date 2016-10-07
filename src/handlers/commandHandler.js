@@ -50,8 +50,8 @@ export default class CommandHandler {
     ];
 
     this.bot.sendMessage(this.chatID, 'Select stats to view', options)
-      .then((sent) => {
-        this.bot.onReplyToMessage(sent.chat.id, sent.message_id, ((response) => {
+      .then(() => {
+        this.bot.once('message', (response) => {
           options = {
             ...PARSE_MODE,
             ...REPLY_MARKUP_HIDE_KEYBOARD,
@@ -59,7 +59,7 @@ export default class CommandHandler {
           };
           const statsReply = this.formatStats(response.text, data);
           this.bot.sendMessage(this.chatID, statsReply, options);
-        }));
+        });
       });
   }
 
@@ -76,11 +76,11 @@ export default class CommandHandler {
     ];
 
     this.bot.sendMessage(this.chatID, reply, options)
-      .then((sent) => {
-        this.bot.onReplyToMessage(sent.chat.id, sent.message_id, ((response) => {
+      .then(() => {
+        this.bot.once('message', (response) => {
           this.gameMode = response.text === 'Competitive' ? 'competitive' : 'quickplay';
           this.selectStats(data, response.message_id);
-        }));
+        });
       });
   }
 
