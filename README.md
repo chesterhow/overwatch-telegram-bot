@@ -26,16 +26,19 @@ _Seagull from EU server_
 The bot will then call the API to search for the player. This might take awhile so don't worry if you don't get a reply instantly.
 
 Once the player is found, we'll be prompted to choose a game mode
-
-![Game mode keyboard](http://i.imgur.com/DxO2RTI.png)
+<p align="center">
+  <img src="http://i.imgur.com/DxO2RTI.png" alt="Game mode keyboard" width="350px" />
+</p>
 
 Next, we'll be prompted to choose which stats to view
-
-![Stats keyboard](http://i.imgur.com/sp7KgLy.png)
+<p align="center">
+  <img src="http://i.imgur.com/sp7KgLy.png" alt="Stats keyboard" width="350px" />
+</p>
 
 Finally, the bot will reply with the relevant stats
-
-![Bot's reply](http://i.imgur.com/Ug5lQOt.png)
+<p align="center">
+  <img src="http://i.imgur.com/Ug5lQOt.png" alt="Bot's reply" width="350px" />
+</p>
 
 ## Commands
 These are the list commands currently recognised by the bot
