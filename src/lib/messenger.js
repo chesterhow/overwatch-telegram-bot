@@ -28,16 +28,16 @@ export default class Messenger {
   }
 
   handleText(message) {
+    console.log(`BOT CALLED: ${message.text}`);
+
     const commandHandler = new CommandHandler(this.bot, message);
     const command = message.text.split(' ')[0];
 
     if (validator.isAskingForStats(command)) {
-      console.log(`BOT CALLED: ${message.text}`);
       return commandHandler.getStats();
     }
 
     if (validator.isAskingForHelp(command)) {
-      console.log(`BOT CALLED: ${message.text}`);
       return commandHandler.getHelp();
     }
 
