@@ -28,7 +28,7 @@ export default class Messenger {
   }
 
   handleText(message) {
-    console.log(`BOT CALLED: ${message.text}`);
+    console.log(`[${message.chat.id}]: ${message.text}`);
 
     const commandHandler = new CommandHandler(this.bot, message);
     const command = message.text.split(' ')[0];

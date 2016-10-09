@@ -6,6 +6,9 @@ import formatOverallStats from '../services/formatOverallStats';
 import formatAverageStats from '../services/formatAverageStats';
 import { PARSE_MODE, REPLY_MARKUP_KEYBOARD, REPLY_MARKUP_HIDE_KEYBOARD } from '../constants';
 
+const gameModeCallbacks = {};
+const statsCallbacks = {};
+
 export default class CommandHandler {
   constructor(bot, message) {
     this.bot = bot;
@@ -38,6 +41,25 @@ export default class CommandHandler {
   }
 
   selectStats(data, messageID) {
+    this.bot.on('text', (msg) => {
+      const callback = statsCallbacks[msg.chat.id];
+
+      if (callback) {
+        switch (msg.text) {
+          case 'Overall':
+          case 'Average':
+          case 'Best':
+          case 'Most Played':
+            delete statsCallbacks[msg.chat.id];
+            return callback(msg);
+          default:
+            break;
+        }
+      }
+
+      return null;
+    });
+
     let options = {
       ...PARSE_MODE,
       ...REPLY_MARKUP_KEYBOARD,
@@ -49,21 +71,37 @@ export default class CommandHandler {
       ['Best', 'Most Played'],
     ];
 
-    this.bot.sendMessage(this.chatID, 'Select stats to view', options)
-      .then(() => {
-        this.bot.once('message', (response) => {
-          options = {
-            ...PARSE_MODE,
-            ...REPLY_MARKUP_HIDE_KEYBOARD,
-            reply_to_message_id: response.message_id,
-          };
-          const statsReply = this.formatStats(response.text, data);
-          this.bot.sendMessage(this.chatID, statsReply, options);
-        });
-      });
+    this.bot.sendMessage(this.chatID, 'Select stats to view', options).then(() => {
+      statsCallbacks[this.chatID] = (response) => {
+        options = {
+          ...PARSE_MODE,
+          ...REPLY_MARKUP_HIDE_KEYBOARD,
+          reply_to_message_id: response.message_id,
+        };
+        const statsReply = this.formatStats(response.text, data);
+        this.bot.sendMessage(this.chatID, statsReply, options);
+      };
+    });
   }
 
-  selectGameMode(data, reply) {
+  selectGameMode(data) {
+    this.bot.on('text', (msg) => {
+      const callback = gameModeCallbacks[msg.chat.id];
+
+      if (callback) {
+        switch (msg.text) {
+          case 'Quick Play':
+          case 'Competitive':
+            delete gameModeCallbacks[msg.chat.id];
+            return callback(msg);
+          default:
+            break;
+        }
+      }
+
+      return null;
+    });
+
     const options = {
       ...PARSE_MODE,
       ...REPLY_MARKUP_KEYBOARD,
@@ -75,17 +113,15 @@ export default class CommandHandler {
       ['Competitive'],
     ];
 
-    this.bot.sendMessage(this.chatID, reply, options)
-      .then(() => {
-        this.bot.once('message', (response) => {
-          this.gameMode = response.text === 'Competitive' ? 'competitive' : 'quickplay';
-          this.selectStats(data, response.message_id);
-        });
-      });
+    this.bot.sendMessage(this.chatID, 'Select game mode', options).then(() => {
+      gameModeCallbacks[this.chatID] = (response) => {
+        this.gameMode = response.text === 'Competitive' ? 'competitive' : 'quickplay';
+        this.selectStats(data, response.message_id);
+      };
+    });
   }
 
   getRegionStats(json, region) {
-    let reply = 'Sorry, I could not find the user ';
     let data = null;
 
     if (!region || region === 'us') {
@@ -96,11 +132,7 @@ export default class CommandHandler {
       data = json.kr;
     }
 
-    if (data) {
-      reply = 'Select game mode';
-    }
-
-    return { data, reply };
+    return data;
   }
 
   getStats() {
@@ -113,16 +145,15 @@ export default class CommandHandler {
       this.battletag = messageParts[1];
       const region = messageParts[2];
 
-      fetchStats(this.battletag)
-        .then((json) => {
-          const { data, reply } = this.getRegionStats(json, region);
+      fetchStats(this.battletag).then((json) => {
+        const data = this.getRegionStats(json, region);
 
-          if (data) {
-            this.selectGameMode(data, reply);
-          } else {
-            this.bot.sendMessage(this.chatID, `${reply}${this.battletag}`, PARSE_MODE);
-          }
-        });
+        if (data) {
+          this.selectGameMode(data);
+        } else {
+          this.bot.sendMessage(this.chatID, `Sorry, I could not find the user ${this.battletag}`, PARSE_MODE);
+        }
+      });
     }
   }
 
