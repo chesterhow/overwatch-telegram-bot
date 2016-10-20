@@ -14,6 +14,7 @@ const formatOverallStats = (data, battletag, gameMode) => {
     const winRate = ((stats['wins'] / stats['games']) * 100).toFixed(2);
     competitiveStats = dedent`
     \n- Losses: ${stats['losses'] || 0}
+    - Ties: ${stats['ties'] || 0}
     - Win Rate: ${winRate || 0}%
     - Games: ${stats['games'] || 0}`;
   }
