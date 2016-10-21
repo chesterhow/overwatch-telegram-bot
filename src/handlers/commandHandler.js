@@ -37,7 +37,7 @@ export default class CommandHandler {
   }
 
   sendHint(command) {
-    this.bot.sendMessage(this.chatID, `Use ${command} <Username>-<Battle ID>.\nE.g. ${command} LastBastion-12345`);
+    this.bot.sendMessage(this.chatID, `Use ${command} <Battle Tag>.\nE.g. ${command} LastBastion#12345`);
   }
 
   selectStats(data, messageID) {
@@ -159,12 +159,12 @@ export default class CommandHandler {
 
   getHelp() {
     const reply = dedent`*Help*
-    Usage: /stats <Username>-<Battle ID> <Region>
+    Usage: /stats <Battle Tag> <Region>
 
     *Examples*
-    US player: /stats LastBastion-12345
-    EU player: /stats LastBastion-12345 eu
-    KR player: /stats LastBastion-12345 kr
+    US player: /stats LastBastion#12345
+    EU player: /stats LastBastion#12345 eu
+    KR player: /stats LastBastion#12345 kr
 
     _Note: If region is not specified, it will default to US_`;
     this.bot.sendMessage(this.chatID, reply, PARSE_MODE);
