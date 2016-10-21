@@ -14,6 +14,10 @@ export default class Validator {
     return this.matchPatterns(command, '/stats');
   }
 
+  isAskingForLinks(command) {
+    return this.matchPatterns(command, '/links');
+  }
+
   isAskingForHelp(command) {
     return this.matchPatterns(command, '/help');
   }

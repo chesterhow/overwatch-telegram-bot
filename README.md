@@ -4,9 +4,8 @@ A bot for retrieving players' stats for the game Overwatch via [Telegram](https:
 ## Getting Started
 To get started, you can either message [@ow_stats_bot](https://telegram.me/ow_stats_bot) directly, or add the bot to your group chat.
 
-
 ## Usage
-To retrieve stats, send a message in this format: `/stats <Username>-<Battle ID> <Region>`
+To retrieve stats, send a message in this format: `/stats <Battle Tag> <Region>`
 
 If the player you're searching for is in the America (`us`) server you can leave out the region. If the player is Europe or Korea, simply type `eu` or `kr` in the region section.
 
@@ -15,12 +14,12 @@ We want to get statistics for the player **Seagull#1894**. So, we'll message the
 
 _Seagull from US server_
 ```
-/stats Seagull-1894
+/stats Seagull#1894
 ```
 
 _Seagull from EU server_
 ```
-/stats Seagull-1894 eu
+/stats Seagull#1894 eu
 ```
 
 The bot will then call the API to search for the player. This might take awhile so don't worry if you don't get a reply instantly.
@@ -45,6 +44,7 @@ These are the list commands currently recognised by the bot
 
 ```
 /stats
+/links
 /help
 ```
 
