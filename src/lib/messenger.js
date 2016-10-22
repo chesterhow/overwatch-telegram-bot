@@ -37,6 +37,10 @@ export default class Messenger {
       return commandHandler.getStats();
     }
 
+    if (validator.isAskingForLinks(command)) {
+      return commandHandler.getLinks();
+    }
+
     if (validator.isAskingForHelp(command)) {
       return commandHandler.getHelp();
     }

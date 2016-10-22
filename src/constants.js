@@ -19,4 +19,10 @@ export const REPLY_MARKUP_HIDE_KEYBOARD = {
   },
 };
 
+export const REPLY_MARKUP_INLINE_KEYBOARD = {
+  reply_markup: {
+    inline_keyboard: [],
+  },
+};
+
 export const PARSE_MODE = { parse_mode: 'Markdown' };
