@@ -7,7 +7,7 @@ const headers = HTTP_HEADERS;
 const fetchStats = (battletag) => {
   const url = `${API_URL}/${hashToHypen(battletag)}/blob`;
 
-  return fetch(url, { headers })
+  return fetch(encodeURI(url), { headers })
     .then((response) => response.json())
     .catch((error) => console.log(error));
 };
