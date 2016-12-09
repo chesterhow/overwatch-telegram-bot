@@ -143,9 +143,7 @@ export default class CommandHandler {
       data = json.eu;
     } else if (this.region === 'kr') {
       data = json.kr;
-    } else if (this.region === 'psn') {
-      data = json.any;
-    } else if (this.region === 'xbl') {
+    } else if ((this.region == 'xbl') || (this.region == 'psn'))
       data = json.any;
     }
 
