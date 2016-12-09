@@ -26,3 +26,6 @@ export const REPLY_MARKUP_INLINE_KEYBOARD = {
 };
 
 export const PARSE_MODE = { parse_mode: 'Markdown' };
+
+export const PLAYOVERWATCH_URL = 'https://playoverwatch.com/en-us/career';
+export const MASTEROVERWATCH_URL = 'http://masteroverwatch.com/profile';

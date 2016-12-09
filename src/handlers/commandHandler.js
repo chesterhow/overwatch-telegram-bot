@@ -10,6 +10,8 @@ import {
   REPLY_MARKUP_KEYBOARD,
   REPLY_MARKUP_HIDE_KEYBOARD,
   REPLY_MARKUP_INLINE_KEYBOARD,
+  PLAYOVERWATCH_URL,
+  MASTEROVERWATCH_URL,
 } from '../constants';
 
 const gameModeCallbacks = {};
@@ -45,7 +47,12 @@ export default class CommandHandler {
   }
 
   sendHint(command) {
-    this.bot.sendMessage(this.chatID, `Use ${command} <Battle Tag>.\nE.g. ${command} LastBastion#12345`);
+    const reply = dedent`Use ${command} <ign> <region/platform>
+    E.g. ${command} LastBastion#12345
+
+    Still confused? Try /help`;
+
+    this.bot.sendMessage(this.chatID, reply, PARSE_MODE);
   }
 
   sendNotFound() {
@@ -136,14 +143,13 @@ export default class CommandHandler {
   getRegionStats(json) {
     let data = null;
 
-    if (!this.region || this.region === 'us') {
-      this.region = 'us';
+    if (this.region === 'us') {
       data = json.us;
     } else if (this.region === 'eu') {
       data = json.eu;
     } else if (this.region === 'kr') {
       data = json.kr;
-    } else if ((this.region === 'xbl') || (this.region === 'psn')) {
+    } else if (this.region === 'global') {
       data = json.any;
     }
 
@@ -158,11 +164,14 @@ export default class CommandHandler {
     } else {
       this.bot.sendChatAction(this.chatID, 'typing');
       this.battletag = messageParts[1];
-      this.region = messageParts[2];
-      if ((this.region === 'xbl') || (this.region === 'psn')) {
-        this.platform = this.region;
+      const flag = messageParts[2];
+
+      if (flag === 'xbl' || flag === 'psn') {
+        this.platform = flag;
+        this.region = 'global';
       } else {
         this.platform = 'pc';
+        this.region = flag || 'us';
       }
 
       fetchStats(this.battletag, this.platform).then((json) => {
@@ -184,15 +193,22 @@ export default class CommandHandler {
     };
 
     const battletag = hashToHypen(this.battletag);
+    let playOverwatchLink = '';
+
+    if (this.platform === 'pc') {
+      playOverwatchLink = `${this.region}/${battletag}`;
+    } else {
+      playOverwatchLink = `${battletag}`;
+    }
 
     options['reply_markup']['inline_keyboard'] = [
       [{
         text: 'PlayOverwatch',
-        url: `https://playoverwatch.com/en-us/career/pc/${this.region}/${battletag}`,
+        url: `${PLAYOVERWATCH_URL}/${this.platform}/${playOverwatchLink}`,
       }],
       [{
         text: 'MasterOverwatch',
-        url: `http://masteroverwatch.com/profile/pc/${this.region}/${battletag}`,
+        url: `${MASTEROVERWATCH_URL}/${this.platform}/${this.region}/${battletag}`,
       }],
     ];
 
@@ -207,9 +223,17 @@ export default class CommandHandler {
     } else {
       this.bot.sendChatAction(this.chatID, 'typing');
       this.battletag = messageParts[1];
-      this.region = messageParts[2];
+      const flag = messageParts[2];
 
-      fetchStats(this.battletag).then((json) => {
+      if (flag === 'xbl' || flag === 'psn') {
+        this.platform = flag;
+        this.region = 'global';
+      } else {
+        this.platform = 'pc';
+        this.region = flag || 'us';
+      }
+
+      fetchStats(this.battletag, this.platform).then((json) => {
         const data = this.getRegionStats(json);
 
         if (data) {
@@ -223,15 +247,22 @@ export default class CommandHandler {
 
   getHelp() {
     const reply = dedent`*Here's what I can do*
-    - \`/stats <BattleTag/PSN ID/Xbox Gamertag> <Region/Platform>\`: Retrieve player's stats
-    - \`/links <BattleTag> <Region>\`: Provides links to websites providing more stats
+    - \`/stats <ign> <region/platform>\`: Retrieve player's stats
+    - \`/links <ign> <region/platform>\`: Provides links to websites providing more stats
+
+    _Your ign is either Battletag, PSN ID or Xbox Gamertag_
 
     *Examples*
-    US player: /stats LastBastion#12345
-    EU player: /stats LastBastion#12345 eu
-    KR player: /stats LastBastion#12345 kr
-    PS4 player: /stats LastBastion psn
-    Xbox One player: /stats LastBastion xbl
+    PC
+    US: /stats LastBastion#12345
+    EU: /stats LastBastion#12345 eu
+    KR: /stats LastBastion#12345 kr
+
+    PS4
+    /stats LastBastion psn
+
+    Xbox One
+    /stats LastBastion xbl
 
     _Note: Region is default to US unless specified otherwise_`;
     this.bot.sendMessage(this.chatID, reply, PARSE_MODE);
