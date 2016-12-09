@@ -161,7 +161,7 @@ export default class CommandHandler {
       this.bot.sendChatAction(this.chatID, 'typing');
       this.battletag = messageParts[1];
       this.region = messageParts[2];
-      if (this.region === ('psn' || 'xbl')) {
+      if ((this.region == 'xbl') || (this.region == 'psn')) {
         this.platform = this.region;
       } else {
         this.platform = 'pc';
@@ -225,15 +225,15 @@ export default class CommandHandler {
 
   getHelp() {
     const reply = dedent`*Here's what I can do*
-    - \`/stats <Battle Tag> <Region / Platform>\`: Retrieve player's stats
-    - \`/links <Battle Tag> <Region / Platform>\`: Provides links to websites providing more stats
+    - \`/stats <BattleTag/PSN ID/Xbox Gamertag> <Region/Platform>\`: Retrieve player's stats
+    - \`/links <BattleTag> <Region>\`: Provides links to websites providing more stats
 
     *Examples*
     US player: /stats LastBastion#12345
     EU player: /stats LastBastion#12345 eu
     KR player: /stats LastBastion#12345 kr
-    PS4 player: /stats LastBastion#12345 psn
-    Xbox One player: /stats LastBastion#12345 xbl
+    PS4 player: /stats LastBastion psn
+    Xbox One player: /stats LastBastion xbl
 
     _Note: Region is default to US unless specified otherwise_`;
     this.bot.sendMessage(this.chatID, reply, PARSE_MODE);
