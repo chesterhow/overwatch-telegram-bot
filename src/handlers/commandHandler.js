@@ -143,7 +143,7 @@ export default class CommandHandler {
       data = json.eu;
     } else if (this.region === 'kr') {
       data = json.kr;
-    } else if ((this.region == 'xbl') || (this.region == 'psn'))
+    } else if ((this.region === 'xbl') || (this.region === 'psn')) {
       data = json.any;
     }
 
@@ -159,13 +159,13 @@ export default class CommandHandler {
       this.bot.sendChatAction(this.chatID, 'typing');
       this.battletag = messageParts[1];
       this.region = messageParts[2];
-      if ((this.region == 'xbl') || (this.region == 'psn')) {
+      if ((this.region === 'xbl') || (this.region === 'psn')) {
         this.platform = this.region;
       } else {
         this.platform = 'pc';
       }
 
-      fetchStats(this.battletag,this.platform).then((json) => {
+      fetchStats(this.battletag, this.platform).then((json) => {
         const data = this.getRegionStats(json);
 
         if (data) {
