@@ -28,20 +28,21 @@ export default class Messenger {
   }
 
   handleText(message) {
-    console.log(`[${message.chat.id}]: ${message.text}`);
-
     const commandHandler = new CommandHandler(this.bot, message);
     const command = message.text.split(' ')[0];
 
     if (validator.isAskingForStats(command)) {
+      console.log(`[${message.chat.id}]: ${message.text}`);
       return commandHandler.getStats();
     }
 
     if (validator.isAskingForLinks(command)) {
+      console.log(`[${message.chat.id}]: ${message.text}`);
       return commandHandler.getLinks();
     }
 
     if (validator.isAskingForHelp(command)) {
+      console.log(`[${message.chat.id}]: ${message.text}`);
       return commandHandler.getHelp();
     }
 

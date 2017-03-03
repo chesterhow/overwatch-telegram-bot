@@ -4,7 +4,7 @@ export default class Validator {
   matchPatterns(command, pattern) {
     const patterns = [
       pattern,
-      `${pattern}${BOT_USERNAME}`, // e.g. /stats@ow_stats_bot
+      `${pattern}${BOT_USERNAME}`, // e.g. /stats@OverwotBot
     ];
 
     return patterns.indexOf(command) >= 0;

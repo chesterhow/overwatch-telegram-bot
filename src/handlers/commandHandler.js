@@ -56,7 +56,7 @@ export default class CommandHandler {
   }
 
   sendNotFound() {
-    this.bot.sendMessage(this.chatID, `Sorry, I could not find the user ${this.battletag}`, PARSE_MODE);
+    this.bot.sendMessage(this.chatID, `Sorry, I could not find the user ${this.battletag}`);
   }
 
   selectStats(data, messageID) {
