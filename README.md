@@ -2,7 +2,7 @@
 A bot for retrieving players' stats for the game Overwatch via [Telegram](https://telegram.org/).
 
 ## Getting Started
-To get started, you can either message [@ow_stats_bot](https://telegram.me/ow_stats_bot) directly, or add the bot to your group chat.
+To get started, you can either message [@OverwotBot](https://t.me/OverwotBot) directly, or add the bot to your group chat.
 
 ## Usage
 To retrieve stats, send a message in this format: `/stats <Battle Tag> <Region>`
