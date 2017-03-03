@@ -1,5 +1,5 @@
 export const API_URL = 'https://owapi.net/api/v3/u';
-export const BOT_USERNAME = '@ow_stats_bot';
+export const BOT_USERNAME = '@OverwotBot';
 export const HTTP_HEADERS = { 'Content-Type': 'application/json' };
 
 // sendMessage options
