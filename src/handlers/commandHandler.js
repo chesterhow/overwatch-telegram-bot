@@ -135,7 +135,12 @@ export default class CommandHandler {
     this.bot.sendMessage(this.chatID, 'Select game mode', options).then(() => {
       gameModeCallbacks[this.chatID] = (response) => {
         this.gameMode = response.text === 'Competitive' ? 'competitive' : 'quickplay';
-        this.selectStats(data, response.message_id);
+
+        if (data['stats'][this.gameMode]) {
+          this.selectStats(data, response.message_id);
+        } else {
+          this.bot.sendMessage(this.chatID, `It seems ${this.battletag} has not played any competitive games yet`);
+        }
       };
     });
   }
